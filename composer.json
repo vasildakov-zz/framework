@@ -1,0 +1,44 @@
+{
+    "name": "vasil/framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vasil Dakov",
+            "email": "vasildakov@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^5.6 || ^7.1",
+        "roave/security-advisories": "dev-master",
+        "container-interop/container-interop": "^1.1",
+        "fig/http-message-util": "^1.1",
+        "psr/container": "^1.0",
+        "psr/http-message": "^1.0",
+        "zendframework/zend-diactoros": "^1.3",
+        "aura/router": "^3.1",
+        "zendframework/zend-json": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0",
+        "squizlabs/php_codesniffer": "^2.8",
+        "filp/whoops": "^1.1 || ^2.0",
+        "satooshi/php-coveralls": "^1.0",
+        "phpunit/php-code-coverage": "^5.0",
+        "phpmetrics/phpmetrics": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Framework\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FrameworkTest\\": "test/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.1.0"
+        }
+    }
+}
