@@ -2,9 +2,8 @@
 namespace Framework\Container;
 
 use Psr\Container\ContainerInterface;
+use Aura\Router\RouterContainer as Router;
 use Framework\Router\AuraRouter as AuraBridge;
-
-use Application\Action;
 
 class RouterFactory
 {
@@ -14,12 +13,15 @@ class RouterFactory
      */
     public function __invoke(ContainerInterface $container)
     {
-        //$router = $container->get('Aura\Router\Router');
-        $router = new \Aura\Router\RouterContainer();
+        $routes = $container->get('config')['routes'];
+
+        $router = new Router();
         $map = $router->getMap();
 
-        $map->get('home', '/', new Action\Home());
-        $map->get('ping', '/ping', new Action\Ping());
+        foreach ($routes as $route) {
+            extract($route);
+            $map->route($name, $path, new $handler)->allows($method);
+        }
 
         return new AuraBridge($router);
     }

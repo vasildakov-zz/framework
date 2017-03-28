@@ -14,13 +14,14 @@ use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\ServerRequestFactory;
 
-
 class Application implements ApplicationInterface
 {
     /**
      * @var RouterInterface
      */
     private $router;
+
+    private $routes = [];
 
     /**
      * @var EmitterInterface
@@ -49,7 +50,7 @@ class Application implements ApplicationInterface
 
     public function getEmitter()
     {
-        if (! $this->emitter) {
+        if (!$this->emitter) {
             $this->emitter = new SapiEmitter();
         }
         return $this->emitter;
@@ -57,16 +58,13 @@ class Application implements ApplicationInterface
 
     /**
      * Emitting responses
-     * @see https://github.com/zendframework/zend-diactoros/blob/master/doc/book/emitting-responses.md
      */
-    public function run(ServerRequestInterface $request = null, ResponseInterface $response = null)
+    public function run(ServerRequestInterface $request = null)
     {
         // the request
-        $request  = $request ?: ServerRequestFactory::fromGlobals();
+        $request = $request ?: ServerRequestFactory::fromGlobals();
 
         // the response
-        // $response = $response ?: new Response();
-
         $response = $this->process($request);
 
         $emitter = $this->getEmitter();
@@ -74,15 +72,21 @@ class Application implements ApplicationInterface
     }
 
 
-    /**
-     * @see https://github.com/zendframework/zend-expressive/blob/master/src/Middleware/DispatchMiddleware.php
-     * @see https://github.com/zendframework/zend-expressive/blob/master/src/Middleware/RouteMiddleware.php
-     */
+    public function route($path, $handler, $method, $name)
+    {
+        $route = new Router\Route($path, $middleware, $methods, $name);
+        $this->router->addRoute($route);
+
+        return $route;
+    }
+
+
     public function process(ServerRequestInterface $request)
     {
         $route = $this->router->match($request);
 
         $callable = $route->handler;
+
         $response = $callable($request);
 
         return $response;

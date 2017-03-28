@@ -7,5 +7,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 interface ApplicationInterface
 {
-    public function run(ServerRequestInterface $request, ResponseInterface $response);
+    /**
+     * @param  ServerRequestInterface $request
+     */
+    public function run(ServerRequestInterface $request);
 }

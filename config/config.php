@@ -11,6 +11,20 @@ $array = [
             Framework\Application::class => Framework\ApplicationFactory::class,
             Framework\Router\RouterInterface::class => Framework\Container\RouterFactory::class,
         ],
+    ],
+    'routes' => [
+        [
+            'name' => 'home',
+            'path' => '/',
+            'method' => 'GET',
+            'handler' => Application\Action\Home::class
+        ],
+        [
+            'name' => 'ping',
+            'path' => '/ping',
+            'method' => 'GET',
+            'handler' => Application\Action\Ping::class
+        ]
     ]
 ];
 

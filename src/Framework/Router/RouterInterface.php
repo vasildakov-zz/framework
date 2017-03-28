@@ -2,9 +2,11 @@
 
 namespace Framework\Router;
 
+use Psr\Http\Message\ServerRequestInterface as Request;
+
 interface RouterInterface
 {
-    public function addRoute($route);
+    public function addRoute(Route $route);
 
-    public function match($request);
+    public function match(Request $request);
 }
