@@ -1,12 +1,3 @@
-# Framework
-framework
-
-## Container
-```bash
-$ composer require zendframework/zend-servicemanager
-```
-
-```php
 <?php
 
 use Zend\ServiceManager\Config;
@@ -23,5 +14,3 @@ $container = new ServiceManager();
 $container->setService('config', $config);
 
 return $container;
-
-```

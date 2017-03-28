@@ -1,0 +1,19 @@
+<?php
+use Zend\Diactoros\Response\EmitterInterface;
+use Zend\Diactoros\Response\SapiEmitter;
+
+$array = [
+    'dependencies' => [
+        'invokables' => [
+            EmitterInterface::class => SapiEmitter::class
+        ],
+        'factories' => [
+            Framework\Application::class => Framework\ApplicationFactory::class,
+            Framework\Router\RouterInterface::class => Framework\Container\RouterFactory::class,
+        ],
+    ]
+];
+
+$config = new ArrayObject($array);
+
+return (array) $config;

@@ -1,13 +1,13 @@
 <?php
 
-namespace Framework\Action;
+namespace Application\Action;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\RequestInterface;
 
 use Zend\Diactoros\Response\JsonResponse;
 
-class Ping
+class Home
 {
     public function __construct() {}
 
@@ -17,6 +17,6 @@ class Ping
      */
     public function __invoke(RequestInterface $request) : ResponseInterface
     {
-        return new JsonResponse(['ack' => time()], 200);
+        return new JsonResponse(['page' => 'home'], 200);
     }
 }

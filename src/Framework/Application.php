@@ -17,10 +17,26 @@ use Zend\Diactoros\ServerRequestFactory;
 
 class Application implements ApplicationInterface
 {
-    private $emitter;
+    /**
+     * @var RouterInterface
+     */
     private $router;
+
+    /**
+     * @var EmitterInterface
+     */
+    private $emitter;
+
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
+    /**
+     * @param RouterInterface|null    $router
+     * @param ContainerInterface|null $container
+     * @param EmitterInterface|null   $emitter
+     */
     public function __construct(
         RouterInterface $router = null,
         ContainerInterface $container = null,
@@ -45,9 +61,14 @@ class Application implements ApplicationInterface
      */
     public function run(ServerRequestInterface $request = null, ResponseInterface $response = null)
     {
+        // the request
+        $request  = $request ?: ServerRequestFactory::fromGlobals();
+
+        // the response
         // $response = $response ?: new Response();
 
-        $response = $this->process($request, $delegate);
+        $response = $this->process($request);
+
         $emitter = $this->getEmitter();
         $emitter->emit($response);
     }
@@ -59,11 +80,11 @@ class Application implements ApplicationInterface
      */
     public function process(ServerRequestInterface $request)
     {
-        $result = $this->router->match($request);
+        $route = $this->router->match($request);
 
-        // handler
-        // return $delegate->process($request);
-        $response = new Response\JsonResponse(['bar' => 'foo'], 200);
+        $callable = $route->handler;
+        $response = $callable($request);
+
         return $response;
     }
 }
