@@ -8,7 +8,7 @@ $array = [
             EmitterInterface::class => SapiEmitter::class
         ],
         'factories' => [
-            Framework\Application::class => Framework\ApplicationFactory::class,
+            Framework\Application::class            => Framework\ApplicationFactory::class,
             Framework\Router\RouterInterface::class => Framework\Container\RouterFactory::class,
         ],
     ],

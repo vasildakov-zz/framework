@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Framework;
 
@@ -21,6 +21,9 @@ class Application implements ApplicationInterface
      */
     private $router;
 
+    /**
+     * @var array
+     */
     private $routes = [];
 
     /**
@@ -34,17 +37,16 @@ class Application implements ApplicationInterface
     private $container;
 
     /**
+     * Constructor
+     *
      * @param RouterInterface|null    $router
-     * @param ContainerInterface|null $container
      * @param EmitterInterface|null   $emitter
      */
     public function __construct(
         RouterInterface $router = null,
-        ContainerInterface $container = null,
         EmitterInterface $emitter = null
     ) {
         $this->router     = $router;
-        $this->container  = $container;
         $this->emitter    = $emitter;
     }
 
@@ -58,13 +60,13 @@ class Application implements ApplicationInterface
 
     /**
      * Emitting responses
+     *
+     * @param ServerRequestInterface
      */
     public function run(ServerRequestInterface $request = null)
     {
-        // the request
         $request = $request ?: ServerRequestFactory::fromGlobals();
 
-        // the response
         $response = $this->process($request);
 
         $emitter = $this->getEmitter();
@@ -72,23 +74,38 @@ class Application implements ApplicationInterface
     }
 
 
+    /**
+     * Route
+     *
+     * @param  string $path
+     * @param  string $handler
+     * @param  string $method
+     * @param  string $name
+     * @return Route
+     */
     public function route($path, $handler, $method, $name)
     {
-        $route = new Router\Route($path, $middleware, $methods, $name);
-        $this->router->addRoute($route);
+        $route = new Router\Route($path, $handler, $method, $name);
+        $this->router->add($route);
 
         return $route;
     }
 
 
+    /**
+     * Process
+     *
+     * @param  ServerRequestInterface $request
+     * @return ResponseInterface $response
+     */
     public function process(ServerRequestInterface $request)
     {
         $route = $this->router->match($request);
 
-        $callable = $route->handler;
-
-        $response = $callable($request);
-
-        return $response;
+        if ($route) {
+            $middleware = $route->handler;
+            return $middleware->process($request);
+        }
+        return new \Zend\Diactoros\Response\EmptyResponse;
     }
 }

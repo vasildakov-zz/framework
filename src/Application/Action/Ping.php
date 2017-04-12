@@ -3,17 +3,24 @@
 namespace Application\Action;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Interop\Http\ServerMiddleware\DelegateInterface;
+
 use Zend\Diactoros\Response\JsonResponse;
 
-class Ping
+class Ping implements MiddlewareInterface
 {
     /**
-     * @param  RequestInterface   $request
-     * @return ResponseInterface  $response
+     * @param  ServerRequestInterface   $request
+     * @param  DelegateInterface        $delegate
+     * @return ResponseInterface        $response
      */
-    public function __invoke(RequestInterface $request) : ResponseInterface
-    {
+    public function process(
+        ServerRequestInterface $request,
+        DelegateInterface $delegate = null
+    ) {
         return new JsonResponse(['ack' => time()], 200);
     }
 }

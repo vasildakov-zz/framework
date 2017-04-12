@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Framework\Router;
 
-class Route
+final class Route
 {
     /**
      * @var string
@@ -47,22 +47,48 @@ class Route
             throw new \InvalidArgumentException('Invalid path; must be a string');
         }
         $this->path = $path;
+
+        return $this;
+    }
+
+    public function path()
+    {
+        return $this->path;
     }
 
     private function setHandler($handler)
     {
-        if (! is_callable($handler)) {
-            throw new \InvalidArgumentException('Invalid handler; must be a callable');
-        }
+        $this->handler = $handler;
+
+        return $this;
+    }
+
+    public function handler()
+    {
+        return $this->handler;
     }
 
     private function setMethod($method)
     {
         $this->method = strtoupper($method);
+
+        return $this;
+    }
+
+    public function method()
+    {
+        return $this->method;
     }
 
     private function setName($name)
     {
         $this->name = (string) $name;
+
+        return $this;
+    }
+
+    public function name()
+    {
+        return $this->name;
     }
 }

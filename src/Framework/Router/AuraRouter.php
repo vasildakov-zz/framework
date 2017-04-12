@@ -1,51 +1,58 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Framework\Router;
 
-use Aura\Router\Route as AuraRoute;
-use Aura\Router\RouterContainer as Router;
-use Aura\Router\Rule\Path as PathRule;
+// use Aura\Router\Route as AuraRoute;
+// use Aura\Router\RouterContainer;
+// use Aura\Router\Rule\Path;
 
-use Fig\Http\Message\RequestMethodInterface as RequestMethod;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Fig\Http\Message\RequestMethodInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class AuraRouter implements RouterInterface
 {
+    /**
+     * @var Aura\Router\RouterContainer
+     */
     private $router;
 
+    /**
+     * @var Aura\Router\Route[]
+     */
     private $routes = [];
 
-
-    public function __construct(Router $router = null)
+    /**
+     * @param Router|null $router
+     */
+    public function __construct(\Aura\Router\RouterContainer $router = null)
     {
         if (null === $router) {
-            $router = $this->createRouter();
+            $router = new \Aura\Router\RouterContainer();
         }
         $this->router = $router;
     }
 
-
-    public function addRoute(Route $route)
+    /**
+     * @param Route $route
+     */
+    public function add(Route $route)
     {
-        $auraRoute = new AuraRoute();
-        $auraRoute->name($route->getName());
-        $auraRoute->path($route->getPath());
-        $auraRoute->handler($route->getHandler());
-        $auraRoute->allows($route->getMethod());
+        $auraRoute = new \Aura\Router\Route();
+        $auraRoute->name($route->name());
+        $auraRoute->path($route->path());
+        $auraRoute->handler($route->handler());
+        $auraRoute->allows($route->method());
 
         $this->router->getMap()->addRoute($auraRoute);
-
-        //$this->router->getMap()->addRoute($auraRoute);
-
-        //$this->routes[] = $route;
     }
 
-
-    public function match(Request $request)
+    /**
+     * @param ServerRequestInterface $request
+     */
+    public function match(ServerRequestInterface $request)
     {
         $matcher = $this->router->getMatcher();
 
         return $matcher->match($request);
-
     }
 }
